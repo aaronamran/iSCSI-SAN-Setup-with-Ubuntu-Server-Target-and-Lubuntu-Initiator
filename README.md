@@ -61,8 +61,10 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   # Create a Logical Volume
   sudo lvcreate -L 4G -n lv_storage vg_iscsi
   ```
+  ![image](https://github.com/user-attachments/assets/f60245c8-1afb-4c3b-bf5c-e05b844e742a)
 
-- Create iSCSI target with `targetcli`
+
+- Create iSCSI target with `targetcli` interactive shell. This specific step requires the IQN (iSCSI Qualified Name) of the Lubuntu Client iSCSI initiator. Setup the iSCSI on Lubuntu Client VM at [iSCSI Initiator Setup on Lubuntu Client VM](#iscsi-initiator-setup-on-lubuntu-client-vm) then return to this step
   ```
   sudo targetcli
   
@@ -82,6 +84,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   # Save and exit
   exit
   ```
+  
 
 - Enable and start the target service
   ```
