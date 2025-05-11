@@ -200,6 +200,13 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   ![image](https://github.com/user-attachments/assets/67615307-3c9f-4026-9904-15cc28f344d5)
 
+- Trying to delete the session while it is still running is not doable. The following command should be used in order
+  ```
+  sudo iscsiadm -m node --logout
+  sudo iscsiadm -m node -o delete
+  ```
+  ![image](https://github.com/user-attachments/assets/1b57cf5d-4f7d-4221-9fda-f0c304930cd0) 
+
 
 - To check for errors in logs use
   ```
