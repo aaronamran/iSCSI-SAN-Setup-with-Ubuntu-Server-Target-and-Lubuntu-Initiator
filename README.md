@@ -198,13 +198,40 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   sudo iscsiadm -m session
   ```
-  
+  ![image](https://github.com/user-attachments/assets/67615307-3c9f-4026-9904-15cc28f344d5)
+
 
 - To check for errors in logs use
   ```
   journalctl -b | grep iscsi
   ```
-  ![image](https://github.com/user-attachments/assets/da00a7dd-ec9a-40d2-8826-ce6a154751d2)
+  An example of iSCSI target session being unavailable due to change of IP address is shown in the following screenshot <br />
+  ![image](https://github.com/user-attachments/assets/da00a7dd-ec9a-40d2-8826-ce6a154751d2) <br />
+
+  To troubleshoot this case, delete the old iSCSI target session
+  ```
+  sudo iscsiadm -m node -o delete
+  ```
+  
+  Then discover the new target IP
+  ```
+  sudo iscsiadm -m discovery -t sendtargets -p 192.168.1.5
+  ```
+
+  Login to the target again
+  ```
+  sudo iscsiadm -m node --login
+  ```
+
+  Make this login persistent again. Replace the IQN if it differs
+  ```
+  sudo iscsiadm -m node -T iqn.2025-05.com.example:storage.target1 -p 192.168.1.5 --op update -n node.startup -v automatic
+  ```
+  ![image](https://github.com/user-attachments/assets/fb219b10-b0e1-457f-9138-d4f4cb466200)
+
+
+  
+  
 
 
 
