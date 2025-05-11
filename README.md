@@ -139,12 +139,49 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 ## Automation and Testing of iSCSI
 
 - For this section, a systemd unit or shell script that runs at boot to ensure LVM and iSCSI coming up properly will be created
-- `targetcli` saves config to `/etc/target/saveconfig.json` automatically
-- Use the commands to automate initiator login (on iscsi-initiator)
+- In Ubuntu Server VM, `targetcli` saves config to `/etc/target/saveconfig.json` automatically and this config is auto-loaded by the `target` service on boot
+- On Lubuntu Client VM (the iSCSI initiator), use the commands to automate initiator login
   ```
   sudo iscsiadm -m node -T iqn.2025-05.com.example:storage.target1 --op update -n node.startup -v automatic
   sudo systemctl enable open-iscsi
   ```
+
+- To auto-mount the iSCSI disk on boot ensure the iSCSI disk is working now. Run the following command
+  ```
+  lsblk
+  ```
+
+- Create a permanent mount point using
+  ```
+  sudo mkdir -p /mnt/iscsi
+  ```
+
+- Get the UUID of the iSCSI disk as this is safer than using `/dev/sdb` which can change
+  ```
+  sudo blkid /dev/sdb
+  ```
+
+- Open and edit `/etc/fstab` in a text editor
+  ```
+  sudo nano /etc/fstab
+  ```
+
+- Then add this line at the bottom using the UUID obtained previously
+  ```
+  UUID=  /mnt/iscsi  ext4  _netdev  0  0
+  ```
+  `_netdev` is used to tell the system to wait for networking before trying to mount
+
+- Before rebooting, test the fstab entry safely with
+  ```
+  sudo mount -a
+  ```
+
+- Then verify with
+  ```
+  df -h
+  ```
+
 
 - Reboot both VMs and ensure that the initiator automatically connects and mounts the iSCSI LUN
 
