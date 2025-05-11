@@ -104,6 +104,8 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   sudo apt update
   sudo apt install open-iscsi
   ```
+  ![image](https://github.com/user-attachments/assets/46e8993c-7bf2-4bf5-b92e-b864fe7aee1e)
+
 
 - Discover the target. Replace the IP address in the following command with iscsi-target (Ubuntu Server VM) IP address
   ```
