@@ -78,12 +78,14 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/luns create /backstores/block/block1
   
   # Allow initiator access (replace IP or subnet)
-  /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/acls create iqn.2025-05.com.example:client1
+  /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/acls create iqn.2004-10.com.ubuntu:01:327b79a5da9f
   /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/portals create 0.0.0.0 3260
   
   # Save and exit
   exit
   ```
+  In the provided commands, the `com.example` is a user-defined name for the iSCSI target. It is not auto-generated like the initiator IQN and it is free to be customised. IQNs follow this format: `iqn.<year>-<month>.<reversed domain>:<custom-label>` <br />
+  
   
 
 - Enable and start the target service
@@ -106,7 +108,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   ![image](https://github.com/user-attachments/assets/46e8993c-7bf2-4bf5-b92e-b864fe7aee1e) <br />
 
-- After the installation is complete, get the IQN. Note that it requires sudo to read the file
+- After the installation is complete, get the IQN. Note that it requires sudo to read the file. Once obtainig the IQN, return to the `targetcli` step in [iSCSI Target Setup on Ubuntu Server VM](#iscsi-target-setup-on-ubuntu-server-vm) <br />
   ![image](https://github.com/user-attachments/assets/0682147f-da67-4aa2-befc-07a2ba3f9fd8) <br />
 
 
