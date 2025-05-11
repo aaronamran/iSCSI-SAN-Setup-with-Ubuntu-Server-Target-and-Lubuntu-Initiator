@@ -7,7 +7,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 1. [Configuration of VMs in VirtualBox](#configuration-of-vms-in-virtualbox)
 2. [iSCSI Target Setup on Ubuntu Server VM](#iscsi-target-setup-on-ubuntu-server-vm)
 3. [iSCSI Initiator Setup on Lubuntu Client VM](#iscsi-initiator-setup-on-lubuntu-client-vm)
-4. [Automation and Testing of iSCSI](#automation-and-testing-of-iscsi)
+4. [Automation and Testing of Persistent Access](#automation-and-testing-of-persistent-access)
 
 
 ## Configuration of VMs in VirtualBox
@@ -138,7 +138,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ![image](https://github.com/user-attachments/assets/bb1e3ec2-0fda-49c0-b706-b120ee429aa4)
 
 
-## Automation and Testing of iSCSI
+## Automation and Testing of Persistent Access
 
 - For this section, a systemd unit or shell script that runs at boot to ensure LVM and iSCSI coming up properly will be created
 - In Ubuntu Server VM, `targetcli` saves config to `/etc/target/saveconfig.json` automatically and this config is auto-loaded by the `target` service on boot
