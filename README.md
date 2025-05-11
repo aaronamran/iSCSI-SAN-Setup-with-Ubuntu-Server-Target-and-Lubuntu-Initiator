@@ -84,18 +84,16 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   # Save and exit
   exit
   ```
+  ![image](https://github.com/user-attachments/assets/a433c331-a504-4f45-a99d-d90f268e117d) <br />
+
   In the provided commands, the `com.example` is a user-defined name for the iSCSI target. It is not auto-generated like the initiator IQN and it is free to be customised. IQNs follow this format: `iqn.<year>-<month>.<reversed domain>:<custom-label>` <br />
-  
-  
 
 - Enable and start the target service
   ```
   sudo systemctl enable target.service
   sudo systemctl start target.service
   ```
-
-
-
+  ![image](https://github.com/user-attachments/assets/e8be721d-f361-4f45-b1e6-7dda20c24f3b)
 
 
 
