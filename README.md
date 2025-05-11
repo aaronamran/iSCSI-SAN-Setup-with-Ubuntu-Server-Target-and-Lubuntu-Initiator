@@ -145,6 +145,8 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   sudo iscsiadm -m node -T iqn.2025-05.com.example:storage.target1 --op update -n node.startup -v automatic
   sudo systemctl enable open-iscsi
   ```
+  ![image](https://github.com/user-attachments/assets/2c90648c-bf67-41e1-9973-cefada928a89)
+
 
 - To auto-mount the iSCSI disk on boot ensure the iSCSI disk is working now. Run the following command
   ```
@@ -160,6 +162,8 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   sudo blkid /dev/sdb
   ```
+  ![image](https://github.com/user-attachments/assets/eee13094-a444-4f01-8289-af402d29e815)
+
 
 - Open and edit `/etc/fstab` in a text editor
   ```
@@ -168,9 +172,10 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 
 - Then add this line at the bottom using the UUID obtained previously
   ```
-  UUID=  /mnt/iscsi  ext4  _netdev  0  0
+  UUID=315a8e52-f7cb-4b42-bf40-7c605dbe31ce  /mnt/iscsi  ext4  _netdev  0  0
   ```
-  `_netdev` is used to tell the system to wait for networking before trying to mount
+  `_netdev` is used to tell the system to wait for networking before trying to mount <br />
+  ![image](https://github.com/user-attachments/assets/69a8a1bd-8841-4301-a6cd-e79c076a01ba) <br />
 
 - Before rebooting, test the fstab entry safely with
   ```
@@ -181,14 +186,25 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   df -h
   ```
+  ![image](https://github.com/user-attachments/assets/ab65d091-e150-4f92-80d1-11cb91dbc15d)
 
 
-- Reboot both VMs and ensure that the initiator automatically connects and mounts the iSCSI LUN
+- Reboot both VMs using
+  ```
+  sudo shutdown -r
+  ```
 
-- Ensure data written to `/mnt/iscsi` persists as expected
+- Ensure that the initiator automatically connects and mounts the iSCSI LUN by running
+  ```
+  sudo iscsiadm -m session
+  ```
+  
 
-
-
+- To check for errors in logs use
+  ```
+  journalctl -b | grep iscsi
+  ```
+  ![image](https://github.com/user-attachments/assets/da00a7dd-ec9a-40d2-8826-ce6a154751d2)
 
 
 
