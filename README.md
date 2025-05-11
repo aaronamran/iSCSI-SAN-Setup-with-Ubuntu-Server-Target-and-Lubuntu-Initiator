@@ -114,11 +114,13 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   ```
   sudo iscsiadm -m discovery -t st -p 192.168.x.x
   ```
+  ![image](https://github.com/user-attachments/assets/5c37d855-6930-4c10-82e7-4b6ae8063d78)
 
 - Log in to the target using the discovered IQN
   ```
   sudo iscsiadm -m node --login
   ```
+  ![image](https://github.com/user-attachments/assets/5f664b71-6d75-4f63-8378-0be73c9846e1)
 
 - Confirm the connection and the partition
   ```
@@ -129,10 +131,9 @@ This write-up documents a practical SAN-like storage setup project using Virtual
   sudo mkfs.ext4 /dev/sdb
   sudo mkdir /mnt/iscsi
   sudo mount /dev/sdb /mnt/iscsi
+  df -h
   ```
-
-- 
-
+  ![image](https://github.com/user-attachments/assets/bb1e3ec2-0fda-49c0-b706-b120ee429aa4)
 
 
 ## Automation and Testing of iSCSI
