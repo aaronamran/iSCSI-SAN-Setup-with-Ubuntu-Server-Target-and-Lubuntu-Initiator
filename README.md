@@ -5,7 +5,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 1. [Configuration of VMs in VirtualBox](#configuration-of-vms-in-virtualbox)
 2. [iSCSI Target Setup on Ubuntu Server VM](#iscsi-target-setup-on-ubuntu-server-vm)
 3. [iSCSI Initiator Setup on Lubuntu Client VM](#iscsi-initiator-setup-on-lubuntu-client-vm)
-4. [Automation and Testing of iSCSI]()
+4. [Automation and Testing of iSCSI](#automation-and-testing-of-iscsi)
 
 
 ## Configuration of VMs in VirtualBox
