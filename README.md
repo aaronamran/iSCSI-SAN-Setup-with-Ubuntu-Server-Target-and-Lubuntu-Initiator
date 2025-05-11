@@ -5,7 +5,7 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 1. [Configuration of VMs in VirtualBox](#configuration-of-vms-in-virtualbox)
 2. [iSCSI Target Setup on Ubuntu Server VM](#iscsi-target-setup-on-ubuntu-server-vm)
 3. [iSCSI Initiator Setup on Lubuntu Client VM](#iscsi-initiator-setup-on-lubuntu-client-vm)
-4. [Testing of iSCSI Automation]()
+4. [Automation and Testing of iSCSI]()
 
 
 ## Configuration of VMs in VirtualBox
@@ -28,18 +28,128 @@ This write-up documents a practical SAN-like storage setup project using Virtual
 - Before continuing with system updates and tool downloads, change the network adapter from NAT (default) to Brigded Adapter <br />
   ![image](https://github.com/user-attachments/assets/cc1d27a2-9adf-4f31-ba28-f528a48de827) <br />
 
-- Once the template VM is powered on, follow the guided installation for first time setup
+- Add a second virtual disk of 10 GB size to be used as the Logical Unit Number (LUN). In VirtualBox, go to the Settings of Ubuntu Server and navigate to Storage. Click the Add Hard Disk icon <br />
+  ![image](https://github.com/user-attachments/assets/7379978f-b5cf-4bfc-bd7d-e6631ecc7634) <br />
 
-- 
+- In the pop-up, choose Create Disk Image File. Then keep as VDI (VirtualBox Disk Image) and set the size to 10 GB <br />
+  ![image](https://github.com/user-attachments/assets/ede151a0-892f-400e-8034-d65868de5bbd) <br />
+  
+- Once the template VM is powered on, follow the guided installation for first time setup. For the sake of this project, a ubuntu server account name and password of sysadmin will be used
 
 
 
 ## iSCSI Target Setup on Ubuntu Server VM
 
+- Login to the Ubuntu Server VM and install required packages using the following commands
+  ```
+  sudo apt update
+  sudo apt install targetcli-fb lvm2
+  ```
+  ![image](https://github.com/user-attachments/assets/537ba567-20b4-441e-9ad6-bd13f4beef1f) <br />
+
+- Then prepare a volume with LVM
+  ```
+  # Identify your extra disk (e.g., /dev/sdb)
+  lsblk
+  
+  # Create LVM Physical Volume
+  sudo pvcreate /dev/sdb
+  
+  # Create a Volume Group
+  sudo vgcreate vg_iscsi /dev/sdb
+  
+  # Create a Logical Volume
+  sudo lvcreate -L 4G -n lv_storage vg_iscsi
+  ```
+
+- Create iSCSI target with `targetcli`
+  ```
+  sudo targetcli
+  
+  # Create a backstore for the LVM volume
+  /backstores/block create name=block1 dev=/dev/vg_iscsi/lv_storage
+  
+  # Create iSCSI target
+  /iscsi create iqn.2025-05.com.example:storage.target1
+  
+  # Create LUN
+  /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/luns create /backstores/block/block1
+  
+  # Allow initiator access (replace IP or subnet)
+  /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/acls create iqn.2025-05.com.example:client1
+  /iscsi/iqn.2025-05.com.example:storage.target1/tpg1/portals create 0.0.0.0 3260
+  
+  # Save and exit
+  exit
+  ```
+
+- Enable and start the target service
+  ```
+  sudo systemctl enable target.service
+  sudo systemctl start target.service
+  ```
+
+
+
 
 
 
 ## iSCSI Initiator Setup on Lubuntu Client VM
+
+- In Lubuntu Client VM, install the iSCSI tools needed
+  ```
+  sudo apt update
+  sudo apt install open-iscsi
+  ```
+
+- Discover the target. Replace the IP address in the following command with iscsi-target (Ubuntu Server VM) IP address
+  ```
+  sudo iscsiadm -m discovery -t st -p 192.168.x.x
+  ```
+
+- Log in to the target using the discovered IQN
+  ```
+  sudo iscsiadm -m node --login
+  ```
+
+- Confirm the connection and the partition
+  ```
+  lsblk
+  
+  # You should see a new block device (e.g., /dev/sdb)
+  # Optionally format and mount it:
+  sudo mkfs.ext4 /dev/sdb
+  sudo mkdir /mnt/iscsi
+  sudo mount /dev/sdb /mnt/iscsi
+  ```
+
+- 
+
+
+
+## Automation and Testing of iSCSI
+
+- For this section, a systemd unit or shell script that runs at boot to ensure LVM and iSCSI coming up properly will be created
+- `targetcli` saves config to `/etc/target/saveconfig.json` automatically
+- Use the commands to automate initiator login (on iscsi-initiator)
+  ```
+  sudo iscsiadm -m node -T iqn.2025-05.com.example:storage.target1 --op update -n node.startup -v automatic
+  sudo systemctl enable open-iscsi
+  ```
+
+- Reboot both VMs and ensure that the initiator automatically connects and mounts the iSCSI LUN
+
+- Ensure data written to `/mnt/iscsi` persists as expected
+
+
+
+
+
+
+
+
+
+
 
 
 
