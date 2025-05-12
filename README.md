@@ -1,4 +1,4 @@
-# iSCSI-SAN-Setup-with-Ubuntu-Server-Target-and-Lubuntu-Initiator
+# iSCSI SAN Setup with Ubuntu Server Target and Lubuntu Initiator
 
 This write-up documents a practical SAN-like storage setup project using VirtualBox to simulate a Storage Area Network (SAN) environment with free, open-source tools. A Ubuntu Server VM is configured as the iSCSI target using `targetcli`, Logical Volume Manager (LVM), and additional virtual storage disks. A Lubuntu VM acts as the iSCSI initiator, connecting to the target to access and mount remote block storage over the network. This project demonstrates core concepts of enterprise SAN architecture including target and LUN creation, iSCSI discovery and login, persistent mounting via `/etc/fstab`, and automation using systemd, all within a lightweight lab suitable for a single-machine setup. The goal is to gain hands-on experience with iSCSI storage provisioning and emulate real-world infrastructure commonly found in datacenter environments. 
 
